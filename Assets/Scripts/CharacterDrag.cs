@@ -1,11 +1,7 @@
 using UnityEngine;
-using TMPro;
 
 public class CharacterDrag : MonoBehaviour
 {
-    [Header("角色线索配置")]
-    public string clueText; // 该角色的线索内容
-    public TextMeshProUGUI clueDisplayText;
     
     [Header("卡牌引用")]
     public GameObject[] cardObjects; // 拖入3张卡牌的GameObject
@@ -33,10 +29,6 @@ public class CharacterDrag : MonoBehaviour
     void OnMouseDown()
     {
         // 显示线索
-        if (clueDisplayText != null)
-        {
-            clueDisplayText.text = "hint: " + clueText;
-        }
         
         // 计算鼠标与角色的偏移量（关键：拖拽更顺滑）
         // 将屏幕坐标转为世界坐标（Z轴设为0，2D游戏忽略Z轴）
@@ -83,11 +75,12 @@ public class CharacterDrag : MonoBehaviour
             if (cardCollider == null) continue;
 
             // 核心判断：角色的世界位置是否在卡牌碰撞体内
-            if (cardCollider.OverlapPoint(transform.position))
+            if (cardCollider.OverlapPoint(transform.position) && !cardCollider.GetComponent<CardSlot>().isFilled)
             {
                 // 吸附到卡牌中心（Z轴保持0）
                 transform.position = new Vector3(card.transform.position.x, card.transform.position.y, 0);
                 isAttachedToCard = true;
+                cardCollider.GetComponent<CardSlot>().isFilled = true;
                 break; // 匹配到一个卡牌后停止遍历
             }
         }
