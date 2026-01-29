@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class CharacterDrag : MonoBehaviour
 {
-    
     [Header("卡牌引用")]
-    public GameObject[] cardObjects; // 拖入3张卡牌的GameObject
+    public GameObject[] cardObjects;
     
     [Header("视觉效果（可选）")]
     [Range(0.5f, 1f)] public float dragAlpha = 0.7f; // 拖拽时的透明度
@@ -13,6 +12,8 @@ public class CharacterDrag : MonoBehaviour
     private SpriteRenderer spriteRenderer; // 角色的Sprite渲染器
     private Vector3 mouseOffset; // 鼠标与角色的偏移量（避免拖拽时角色瞬移到鼠标位置）
     private bool isDragging = false; // 是否正在拖拽
+    // 新增：记录当前角色绑定的卡牌（关键！用于精准重置isFilled）
+    private CardSlot currentBoundCardSlot; 
 
     void Start()
     {
@@ -22,16 +23,15 @@ public class CharacterDrag : MonoBehaviour
         originalPos = transform.position;
         // 初始化透明度
         spriteRenderer.color = new Color(1, 1, 1, 1);
+        // 初始化绑定的卡牌为null
+        currentBoundCardSlot = null;
     }
-
-    // ===== 鼠标交互核心方法（Sprite专属，需Collider2D）=====
-    // 1. 鼠标按下（点击角色）：显示线索 + 记录鼠标偏移
+    
     void OnMouseDown()
     {
-        // 显示线索
-        
-        // 计算鼠标与角色的偏移量（关键：拖拽更顺滑）
-        // 将屏幕坐标转为世界坐标（Z轴设为0，2D游戏忽略Z轴）
+        // 关键修改1：开始拖拽时，先解绑旧卡牌（重置isFilled）
+        UnbindCurrentCardSlot();
+
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0;
         mouseOffset = transform.position - mouseWorldPos;
@@ -74,13 +74,19 @@ public class CharacterDrag : MonoBehaviour
             BoxCollider2D cardCollider = card.GetComponent<BoxCollider2D>();
             if (cardCollider == null) continue;
 
-            // 核心判断：角色的世界位置是否在卡牌碰撞体内
-            if (cardCollider.OverlapPoint(transform.position) && !cardCollider.GetComponent<CardSlot>().isFilled)
+            CardSlot cardSlot = cardCollider.GetComponent<CardSlot>();
+            if (cardSlot == null) continue;
+
+            // 核心判断：角色的世界位置是否在卡牌碰撞体内，且卡牌未被占用
+            if (cardCollider.OverlapPoint(transform.position) && !cardSlot.isFilled)
             {
                 // 吸附到卡牌中心（Z轴保持0）
                 transform.position = new Vector3(card.transform.position.x, card.transform.position.y, 0);
                 isAttachedToCard = true;
-                cardCollider.GetComponent<CardSlot>().isFilled = true;
+                
+                // 绑定新卡牌，并标记为已填充
+                currentBoundCardSlot = cardSlot;
+                currentBoundCardSlot.isFilled = true;
                 break; // 匹配到一个卡牌后停止遍历
             }
         }
@@ -89,14 +95,31 @@ public class CharacterDrag : MonoBehaviour
         if (!isAttachedToCard)
         {
             transform.position = originalPos;
+            // 关键修改2：归位时解绑旧卡牌
+            UnbindCurrentCardSlot();
         }
     }
 
     // 可选：重置角色位置（比如重新开始游戏时调用）
     public void ResetCharacterPosition()
     {
+        // 关键修改3：重置位置时解绑旧卡牌
+        UnbindCurrentCardSlot();
+        
         transform.position = originalPos;
         isDragging = false;
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+    // 新增：通用解绑方法（复用逻辑，避免重复代码）
+    private void UnbindCurrentCardSlot()
+    {
+        if (currentBoundCardSlot != null)
+        {
+            // 将绑定的卡牌重置为未填充
+            currentBoundCardSlot.isFilled = false;
+            // 清空绑定的卡牌
+            currentBoundCardSlot = null;
+        }
     }
 }
