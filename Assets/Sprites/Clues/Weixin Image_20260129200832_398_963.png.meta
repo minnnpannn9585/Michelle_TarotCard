@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b945d74341bf64e00af2f0e937cb77f7
+guid: 04ec6b7752df1d246bdaa64c89c75ef7
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Magician_P 1_0
+      name: Weixin Image_20260129200832_398_963_0
       rect:
         serializedVersion: 2
-        x: 170
-        y: 864
-        width: 1472
-        height: 2134
+        x: 89
+        y: 817
+        width: 104
+        height: 93
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,8 +124,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7b624dc846591fd4d994b7f7a1bfee43
-      internalID: -499685124
+      spriteID: 1374bca09c264ec4fa6903a5c842e7da
+      internalID: -1604001917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Weixin Image_20260129200832_398_963_1
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 512
+        width: 394
+        height: 331
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bd6e2498b9893f4c9cdea6d8e23d29d
+      internalID: 274130252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: emperpr
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 132
+        width: 214
+        height: 329
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62b49496e794a0444bd621f21378db78
+      internalID: -1094570843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magician
+      rect:
+        serializedVersion: 2
+        x: 862
+        y: 510
+        width: 261
+        height: 333
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10c6611882a1b574c8a54b558eb2dd99
+      internalID: -56941855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: empress
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 137
+        width: 245
+        height: 328
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2f06873f0b46b14fb4357ea05ce592e
+      internalID: 1125763874
       vertices: []
       indices: 
       edges: []
@@ -141,7 +225,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Magician_P 1_0: -499685124
+      Weixin Image_20260129200832_398_963_0: -1604001917
+      Weixin Image_20260129200832_398_963_1: 274130252
+      emperpr: -1094570843
+      empress: 1125763874
+      magician: -56941855
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

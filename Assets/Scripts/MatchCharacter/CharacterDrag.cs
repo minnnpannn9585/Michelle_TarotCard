@@ -8,6 +8,9 @@ public class CharacterDrag : MonoBehaviour
     [Header("视觉效果（可选）")]
     [Range(0.5f, 1f)] public float dragAlpha = 0.7f; // 拖拽时的透明度
 
+    // 新增：角色的整型ID，用于与 CardSlot.expectedId 比较
+    public int characterId = -1;
+
     private Vector3 originalPos; // 角色初始世界位置（核心：归位用）
     private SpriteRenderer spriteRenderer; // 角色的Sprite渲染器
     private Vector3 mouseOffset; // 鼠标与角色的偏移量（避免拖拽时角色瞬移到鼠标位置）
@@ -29,7 +32,7 @@ public class CharacterDrag : MonoBehaviour
     
     void OnMouseDown()
     {
-        // 关键修改1：开始拖拽时，先解绑旧卡牌（重置isFilled）
+        // 开始拖拽时，先解绑旧卡牌（重置isFilled）
         UnbindCurrentCardSlot();
 
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -87,6 +90,12 @@ public class CharacterDrag : MonoBehaviour
                 // 绑定新卡牌，并标记为已填充
                 currentBoundCardSlot = cardSlot;
                 currentBoundCardSlot.isFilled = true;
+                // 记录当前卡位的角色引用与ID（用于 int 比较）
+                currentBoundCardSlot.currentCharacter = gameObject;
+                currentBoundCardSlot.currentCharacterId = characterId;
+
+                CardManager.Instance?.CheckWin();
+
                 break; // 匹配到一个卡牌后停止遍历
             }
         }
@@ -95,7 +104,7 @@ public class CharacterDrag : MonoBehaviour
         if (!isAttachedToCard)
         {
             transform.position = originalPos;
-            // 关键修改2：归位时解绑旧卡牌
+            // 归位时解绑旧卡牌
             UnbindCurrentCardSlot();
         }
     }
@@ -103,7 +112,7 @@ public class CharacterDrag : MonoBehaviour
     // 可选：重置角色位置（比如重新开始游戏时调用）
     public void ResetCharacterPosition()
     {
-        // 关键修改3：重置位置时解绑旧卡牌
+        // 重置位置时解绑旧卡牌
         UnbindCurrentCardSlot();
         
         transform.position = originalPos;
@@ -116,8 +125,10 @@ public class CharacterDrag : MonoBehaviour
     {
         if (currentBoundCardSlot != null)
         {
-            // 将绑定的卡牌重置为未填充
+            // 将绑定的卡牌重置为未填充，并清除对角色的引用与ID
             currentBoundCardSlot.isFilled = false;
+            currentBoundCardSlot.currentCharacter = null;
+            currentBoundCardSlot.currentCharacterId = -1;
             // 清空绑定的卡牌
             currentBoundCardSlot = null;
         }
