@@ -4,8 +4,6 @@ using UnityEngine.SceneManagement;
 public class CardManager : MonoBehaviour
 {
     public static CardManager Instance { get; private set; }
-    // 指向一个胜利面板（在Inspector中指定），可为空（会至少输出日志）
-    //public GameObject victoryPanel;
 
     private CardSlot[] cardSlots;
 
@@ -25,7 +23,6 @@ public class CardManager : MonoBehaviour
         cardSlots = FindObjectsOfType<CardSlot>();
     }
 
-    // 每次有卡片放/移除时调用：先检查是否所有卡位都被填满，再判断是否全部放对
     public void CheckWin()
     {
         if (cardSlots == null || cardSlots.Length == 0) return;
