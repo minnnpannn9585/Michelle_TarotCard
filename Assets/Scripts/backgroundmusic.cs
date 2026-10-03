@@ -6,10 +6,17 @@ public class backgroundmusic : MonoBehaviour
 {
     [SerializeField] AudioClip musicClip;
     [SerializeField, Range(0f, 1f)] float volume = 0.6f;
+    [Tooltip("Skip silence MP3 encoders add at the start. 0.025 is typical.")]
+    [SerializeField] float startTrim = 0.025f;
+    [Tooltip("Skip silence MP3 encoders add at the end. Raise this if a pause remains.")]
+    [SerializeField] float endTrim = 0.08f;
     [Tooltip("Scene names where this track should loop. Leave empty to play in every scene.")]
-    [SerializeField] string[] playInScenes = { "MainMenu" };
+    [SerializeField] string[] playInScenes = { "MainMenu", "StartGame" };
 
-    AudioSource audioSource;
+    AudioSource[] sources;
+    int flip;
+    double nextStartTime;
+    bool looping;
 
     void Awake()
     {
@@ -21,14 +28,12 @@ public class backgroundmusic : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
 
-        audioSource = GetComponent<AudioSource>();
-        audioSource.loop = true;
-        audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 0f;
-        audioSource.volume = volume;
+        AudioSource existing = GetComponent<AudioSource>();
+        AudioSource extra = gameObject.AddComponent<AudioSource>();
+        sources = new[] { existing, extra };
 
-        if (musicClip != null)
-            audioSource.clip = musicClip;
+        for (int i = 0; i < sources.Length; i++)
+            ConfigureSource(sources[i]);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         ApplyForScene(SceneManager.GetActiveScene().name);
@@ -39,6 +44,19 @@ public class backgroundmusic : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    void Update()
+    {
+        if (!looping || musicClip == null)
+            return;
+
+        if (AudioSettings.dspTime < nextStartTime - 0.5)
+            return;
+
+        nextStartTime += LoopDuration();
+        Schedule(sources[flip], nextStartTime);
+        flip = 1 - flip;
+    }
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         ApplyForScene(scene.name);
@@ -46,27 +64,69 @@ public class backgroundmusic : MonoBehaviour
 
     void ApplyForScene(string sceneName)
     {
-        if (audioSource == null)
-            return;
-
-        if (musicClip != null && audioSource.clip != musicClip)
-            audioSource.clip = musicClip;
-
-        audioSource.volume = volume;
-        audioSource.loop = true;
-
-        if (audioSource.clip == null)
+        if (sources == null)
             return;
 
         if (ShouldPlayInScene(sceneName))
         {
-            if (!audioSource.isPlaying)
-                audioSource.Play();
+            if (!looping)
+                BeginLoop();
         }
-        else if (audioSource.isPlaying)
+        else if (looping)
         {
-            audioSource.Stop();
+            StopLoop();
         }
+    }
+
+    void BeginLoop()
+    {
+        if (musicClip == null)
+            return;
+
+        for (int i = 0; i < sources.Length; i++)
+        {
+            ConfigureSource(sources[i]);
+            sources[i].clip = musicClip;
+        }
+
+        double duration = LoopDuration();
+        double start = AudioSettings.dspTime + 0.05;
+        Schedule(sources[0], start);
+        nextStartTime = start + duration;
+        Schedule(sources[1], nextStartTime);
+        flip = 0;
+        looping = true;
+    }
+
+    void StopLoop()
+    {
+        looping = false;
+        for (int i = 0; i < sources.Length; i++)
+            sources[i].Stop();
+    }
+
+    void ConfigureSource(AudioSource source)
+    {
+        source.playOnAwake = false;
+        source.loop = false;
+        source.spatialBlend = 0f;
+        source.volume = volume;
+    }
+
+    void Schedule(AudioSource source, double dspTime)
+    {
+        source.Stop();
+        source.clip = musicClip;
+        source.PlayScheduled(dspTime);
+        source.time = Mathf.Max(0f, startTrim);
+        source.SetScheduledEndTime(dspTime + LoopDuration());
+    }
+
+    double LoopDuration()
+    {
+        double full = (double)musicClip.samples / musicClip.frequency;
+        double duration = full - startTrim - endTrim;
+        return duration > 0.05 ? duration : full;
     }
 
     bool ShouldPlayInScene(string sceneName)

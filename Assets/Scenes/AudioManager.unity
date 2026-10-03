@@ -293,6 +293,7 @@ MonoBehaviour:
   volume: 0.6
   playInScenes:
   - MainMenu
+  - StartGame
 --- !u!4 &1689825707
 Transform:
   m_ObjectHideFlags: 0
