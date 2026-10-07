@@ -53,6 +53,6 @@ public class CardManager : MonoBehaviour
 
         // 全部填满且全部放对 -> 胜利
         Debug.Log("Victory! All cards placed correctly.");
-        SceneManager.LoadScene("Cutscene");
+        SceneManager.LoadScene("Scene Symbol");
     }
 }

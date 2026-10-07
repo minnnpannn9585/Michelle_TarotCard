@@ -1055,7 +1055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1de0720512066e54cae16909b2559271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicClip: {fileID: 8300000, guid: 8eafd9a9cb2236c42866027805b7734f, type: 3}
+  musicClip: {fileID: 8300000, guid: 507342cfede972a4c9fa2de705c90885, type: 3}
   volume: 0.603
   startTrim: 0
   endTrim: 0

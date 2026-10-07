@@ -6,6 +6,8 @@ public class levelSelect : MonoBehaviour
     [SerializeField] Sprite otherSprite;
     [Tooltip("Leave empty to use the first SpriteRenderer under this object.")]
     [SerializeField] SpriteRenderer targetRenderer;
+    [Tooltip("Shown only while this object is selected. Leave empty to use an inactive child.")]
+    [SerializeField] GameObject selectedObject;
 
     static levelSelect selected;
 
@@ -24,6 +26,11 @@ public class levelSelect : MonoBehaviour
 
         if (targetRenderer != null)
             originalSprite = targetRenderer.sprite;
+
+        if (selectedObject == null)
+            selectedObject = FindInactiveChild();
+
+        SetSelectedObjectVisible(false);
 
         worldCamera = Camera.main;
     }
@@ -57,12 +64,22 @@ public class levelSelect : MonoBehaviour
 
         if (targetRenderer != null)
             targetRenderer.sprite = otherSprite;
+
+        SetSelectedObjectVisible(true);
     }
 
     void RestoreOriginal()
     {
         if (targetRenderer != null)
             targetRenderer.sprite = originalSprite;
+
+        SetSelectedObjectVisible(false);
+    }
+
+    void SetSelectedObjectVisible(bool visible)
+    {
+        if (selectedObject != null && selectedObject.activeSelf != visible)
+            selectedObject.SetActive(visible);
     }
 
     bool IsClickOnCircle()
@@ -84,5 +101,17 @@ public class levelSelect : MonoBehaviour
         }
 
         return GetComponent<SpriteRenderer>();
+    }
+
+    GameObject FindInactiveChild()
+    {
+        foreach (Transform child in transform)
+        {
+            if (!child.gameObject.activeSelf
+                && (targetRenderer == null || child.gameObject != targetRenderer.gameObject))
+                return child.gameObject;
+        }
+
+        return null;
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b5aae1b11c4e245c4a02c92e37ba1234
+guid: 7dbc7ff9c6e8e4dbc88f0511ae2b3347
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -93,17 +93,43 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Emperor_2_0
+      name: Empress_2_0
       rect:
         serializedVersion: 2
-        x: 1144
-        y: 224
-        width: 549
-        height: 1267
+        x: 188
+        y: 257
+        width: 469
+        height: 1057
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +137,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0dbb38d413af24c2e965cfb8dfdd4137
-      internalID: -837224214
+      spriteID: 8fd0f49e0213d4aa890311669406ae4d
+      internalID: -1823855991
       vertices: []
       indices: 
       edges: []
@@ -128,7 +154,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Emperor_2_0: -837224214
+      Empress_2_0: -1823855991
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

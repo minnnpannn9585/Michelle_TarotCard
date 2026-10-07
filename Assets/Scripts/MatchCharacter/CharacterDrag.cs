@@ -7,12 +7,16 @@ public class CharacterDrag : MonoBehaviour
     
     [Header("视觉效果（可选）")]
     [Range(0.5f, 1f)] public float dragAlpha = 0.7f; // 拖拽时的透明度
+    [Tooltip("Shown while free. Leave empty to use the active child sprite.")]
+    public GameObject unboundVisual;
+    [Tooltip("Shown only when bound to a slot. Leave empty to use the inactive child sprite.")]
+    public GameObject boundVisual;
 
     // 新增：角色的整型ID，用于与 CardSlot.expectedId 比较
     public int characterId = -1;
 
     private Vector3 originalPos; // 角色初始世界位置（核心：归位用）
-    private SpriteRenderer spriteRenderer; // 角色的Sprite渲染器
+    private SpriteRenderer spriteRenderer; // 当前可见的Sprite渲染器
     private Vector3 mouseOffset; // 鼠标与角色的偏移量（避免拖拽时角色瞬移到鼠标位置）
     private bool isDragging = false; // 是否正在拖拽
     // 新增：记录当前角色绑定的卡牌（关键！用于精准重置isFilled）
@@ -20,14 +24,10 @@ public class CharacterDrag : MonoBehaviour
 
     void Start()
     {
-        // 初始化组件引用
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        // 记录角色初始位置（游戏启动时的位置）
+        CacheVisuals();
         originalPos = transform.position;
-        // 初始化透明度
-        spriteRenderer.color = new Color(1, 1, 1, 1);
-        // 初始化绑定的卡牌为null
         currentBoundCardSlot = null;
+        ShowUnboundVisual();
     }
     
     void OnMouseDown()
@@ -41,8 +41,8 @@ public class CharacterDrag : MonoBehaviour
         
         // 标记开始拖拽
         isDragging = true;
-        // 拖拽时半透明（提升体验）
-        spriteRenderer.color = new Color(1, 1, 1, dragAlpha);
+        ShowUnboundVisual();
+        SetVisibleAlpha(dragAlpha);
     }
 
     // 2. 鼠标拖拽中：更新角色位置
@@ -65,7 +65,7 @@ public class CharacterDrag : MonoBehaviour
         
         // 恢复拖拽状态和透明度
         isDragging = false;
-        spriteRenderer.color = new Color(1, 1, 1, 1);
+        SetVisibleAlpha(1f);
 
         // 标记是否匹配到卡牌
         bool isAttachedToCard = false;
@@ -94,6 +94,7 @@ public class CharacterDrag : MonoBehaviour
                 currentBoundCardSlot.currentCharacter = gameObject;
                 currentBoundCardSlot.currentCharacterId = characterId;
 
+                ShowBoundVisual();
                 CardManager.Instance?.CheckWin();
 
                 break; // 匹配到一个卡牌后停止遍历
@@ -117,7 +118,8 @@ public class CharacterDrag : MonoBehaviour
         
         transform.position = originalPos;
         isDragging = false;
-        spriteRenderer.color = new Color(1, 1, 1, 1);
+        ShowUnboundVisual();
+        SetVisibleAlpha(1f);
     }
 
     // 新增：通用解绑方法（复用逻辑，避免重复代码）
@@ -132,5 +134,65 @@ public class CharacterDrag : MonoBehaviour
             // 清空绑定的卡牌
             currentBoundCardSlot = null;
         }
+
+        ShowUnboundVisual();
+    }
+
+    void CacheVisuals()
+    {
+        if (unboundVisual != null && boundVisual != null)
+            return;
+
+        foreach (Transform child in transform)
+        {
+            if (!child.GetComponent<SpriteRenderer>())
+                continue;
+
+            if (child.gameObject.activeSelf)
+            {
+                if (unboundVisual == null)
+                    unboundVisual = child.gameObject;
+            }
+            else if (boundVisual == null)
+            {
+                boundVisual = child.gameObject;
+            }
+        }
+    }
+
+    void ShowBoundVisual()
+    {
+        SetVisualActive(unboundVisual, false);
+        SetVisualActive(boundVisual, true);
+        spriteRenderer = GetVisibleRenderer();
+    }
+
+    void ShowUnboundVisual()
+    {
+        SetVisualActive(boundVisual, false);
+        SetVisualActive(unboundVisual, true);
+        spriteRenderer = GetVisibleRenderer();
+    }
+
+    static void SetVisualActive(GameObject visual, bool active)
+    {
+        if (visual != null && visual.activeSelf != active)
+            visual.SetActive(active);
+    }
+
+    SpriteRenderer GetVisibleRenderer()
+    {
+        if (boundVisual != null && boundVisual.activeSelf)
+            return boundVisual.GetComponent<SpriteRenderer>();
+        if (unboundVisual != null && unboundVisual.activeSelf)
+            return unboundVisual.GetComponent<SpriteRenderer>();
+        return GetComponent<SpriteRenderer>();
+    }
+
+    void SetVisibleAlpha(float alpha)
+    {
+        spriteRenderer = GetVisibleRenderer();
+        if (spriteRenderer != null)
+            spriteRenderer.color = new Color(1, 1, 1, alpha);
     }
 }

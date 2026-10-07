@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0f77d494d6b8941cfaa18980c08bb326
+guid: 89bc2b92a7cb043ecb362a12f6ee7285
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -93,11 +93,37 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Emperor_3_0
+      name: Emperor_0_0
       rect:
         serializedVersion: 2
         x: 1144
@@ -111,8 +137,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e99a12acd261a4fa9ae3cb2c70c7cf64
-      internalID: 240395593
+      spriteID: 1359b0bf02c7a41e78e3d79760415acf
+      internalID: 1211669536
       vertices: []
       indices: 
       edges: []
@@ -128,7 +154,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Emperor_3_0: 240395593
+      Emperor_0_0: 1211669536
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

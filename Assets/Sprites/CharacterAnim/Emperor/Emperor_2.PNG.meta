@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cf9f57da7cf9046b5be7cd5d0c0feb3b
+guid: b5aae1b11c4e245c4a02c92e37ba1234
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -93,26 +93,52 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Magician_0_3
+      name: Emperor_2_0
       rect:
         serializedVersion: 2
-        x: 659
-        y: 769
-        width: 420
-        height: 714
+        x: 1144
+        y: 224
+        width: 549
+        height: 1267
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 74d02314e08f54010bdb820fdf43ebe2
-      internalID: -1481691696
+      spriteID: 0dbb38d413af24c2e965cfb8dfdd4137
+      internalID: -837224214
       vertices: []
       indices: 
       edges: []
@@ -128,13 +154,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Magician_0_0: -1264418220
-      Magician_0_1: -1102655478
-      Magician_0_2: -1806220848
-      Magician_0_3: -1481691696
-      Magician_0_4: 807547514
-      Magician_0_5: -1378651627
-      Magician_0_6: -579485502
+      Emperor_2_0: -837224214
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

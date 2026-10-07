@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: edd91b2ad89944e57b75dcc5ecd58a02
+guid: 4c3d7b42c5889494891ae7b7b599ca37
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -93,11 +93,37 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Magician_1_3
+      name: Magician_0_3
       rect:
         serializedVersion: 2
         x: 659
@@ -105,14 +131,14 @@ TextureImporter:
         width: 420
         height: 1255
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a4c4554743bef4d51af0da6561db2ad7
-      internalID: 97536965
+      spriteID: 74d02314e08f54010bdb820fdf43ebe2
+      internalID: -1481691696
       vertices: []
       indices: 
       edges: []
@@ -128,13 +154,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Magician_1_0: 2062899049
-      Magician_1_1: -1479759995
-      Magician_1_2: -822416112
-      Magician_1_3: 97536965
-      Magician_1_4: -1363207331
-      Magician_1_5: 1634887084
-      Magician_1_6: 1374817694
+      Magician_0_0: -1264418220
+      Magician_0_1: -1102655478
+      Magician_0_2: -1806220848
+      Magician_0_3: -1481691696
+      Magician_0_4: 807547514
+      Magician_0_5: -1378651627
+      Magician_0_6: -579485502
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
