@@ -83,7 +83,7 @@ public class CharacterDrag : MonoBehaviour
             // 核心判断：角色的世界位置是否在卡牌碰撞体内，且卡牌未被占用
             if (cardCollider.OverlapPoint(transform.position) && !cardSlot.isFilled)
             {
-                // 吸附到卡牌中心（Z轴保持0）
+                // 角色本体留在卡牌上，方便再次拖走
                 transform.position = new Vector3(card.transform.position.x, card.transform.position.y, 0);
                 isAttachedToCard = true;
                 
@@ -95,6 +95,7 @@ public class CharacterDrag : MonoBehaviour
                 currentBoundCardSlot.currentCharacterId = characterId;
 
                 ShowBoundVisual();
+                AlignBoundVisualToPivot(card.transform);
                 CardManager.Instance?.CheckWin();
 
                 break; // 匹配到一个卡牌后停止遍历
@@ -148,45 +149,93 @@ public class CharacterDrag : MonoBehaviour
             if (!child.GetComponent<SpriteRenderer>())
                 continue;
 
-            if (child.gameObject.activeSelf)
+            if (child.name.IndexOf("OnCard", System.StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                if (unboundVisual == null)
-                    unboundVisual = child.gameObject;
+                if (boundVisual == null)
+                    boundVisual = child.gameObject;
             }
-            else if (boundVisual == null)
+            else if (unboundVisual == null)
             {
-                boundVisual = child.gameObject;
+                unboundVisual = child.gameObject;
             }
         }
     }
 
     void ShowBoundVisual()
     {
-        SetVisualActive(unboundVisual, false);
-        SetVisualActive(boundVisual, true);
+        SetVisualVisible(unboundVisual, false);
+        SetVisualVisible(boundVisual, true);
         spriteRenderer = GetVisibleRenderer();
     }
 
     void ShowUnboundVisual()
     {
-        SetVisualActive(boundVisual, false);
-        SetVisualActive(unboundVisual, true);
+        SetVisualVisible(boundVisual, false);
+        SetVisualVisible(unboundVisual, true);
         spriteRenderer = GetVisibleRenderer();
     }
 
-    static void SetVisualActive(GameObject visual, bool active)
+    static void SetVisualVisible(GameObject visual, bool visible)
     {
-        if (visual != null && visual.activeSelf != active)
-            visual.SetActive(active);
+        if (visual == null)
+            return;
+
+        if (!visual.activeSelf)
+            visual.SetActive(true);
+
+        SpriteRenderer renderer = visual.GetComponent<SpriteRenderer>();
+        if (renderer != null)
+            renderer.enabled = visible;
+    }
+
+    void AlignBoundVisualToPivot(Transform card)
+    {
+        if (boundVisual == null || card == null)
+            return;
+
+        Transform pivot = FindImagePivot(card);
+        if (pivot == null)
+            return;
+
+        Vector3 position = pivot.position;
+        position.z = boundVisual.transform.position.z;
+        boundVisual.transform.position = position;
+    }
+
+    static Transform FindImagePivot(Transform card)
+    {
+        foreach (Transform child in card)
+        {
+            if (string.Equals(child.name, "ImagePivot", System.StringComparison.OrdinalIgnoreCase))
+                return child;
+        }
+
+        return null;
     }
 
     SpriteRenderer GetVisibleRenderer()
     {
-        if (boundVisual != null && boundVisual.activeSelf)
-            return boundVisual.GetComponent<SpriteRenderer>();
-        if (unboundVisual != null && unboundVisual.activeSelf)
-            return unboundVisual.GetComponent<SpriteRenderer>();
+        SpriteRenderer boundRenderer = GetEnabledRenderer(boundVisual);
+        if (boundRenderer != null)
+            return boundRenderer;
+
+        SpriteRenderer unboundRenderer = GetEnabledRenderer(unboundVisual);
+        if (unboundRenderer != null)
+            return unboundRenderer;
+
         return GetComponent<SpriteRenderer>();
+    }
+
+    static SpriteRenderer GetEnabledRenderer(GameObject visual)
+    {
+        if (visual == null)
+            return null;
+
+        SpriteRenderer renderer = visual.GetComponent<SpriteRenderer>();
+        if (renderer != null && renderer.enabled)
+            return renderer;
+
+        return null;
     }
 
     void SetVisibleAlpha(float alpha)
