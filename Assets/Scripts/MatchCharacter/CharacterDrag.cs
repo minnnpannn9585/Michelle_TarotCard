@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CharacterDrag : MonoBehaviour
@@ -7,6 +8,10 @@ public class CharacterDrag : MonoBehaviour
     
     [Header("视觉效果（可选）")]
     [Range(0.5f, 1f)] public float dragAlpha = 0.7f; // 拖拽时的透明度
+    [Tooltip("Click and place feedback length, in seconds.")]
+    public float feedbackDuration = 0.16f;
+    [Tooltip("How much the sprite squashes. Keep this small.")]
+    public float feedbackAmount = 0.12f;
     [Tooltip("Shown while free. Leave empty to use the active child sprite.")]
     public GameObject unboundVisual;
     [Tooltip("Shown only when bound to a slot. Leave empty to use the inactive child sprite.")]
@@ -20,7 +25,10 @@ public class CharacterDrag : MonoBehaviour
     private Vector3 mouseOffset; // 鼠标与角色的偏移量（避免拖拽时角色瞬移到鼠标位置）
     private bool isDragging = false; // 是否正在拖拽
     // 新增：记录当前角色绑定的卡牌（关键！用于精准重置isFilled）
-    private CardSlot currentBoundCardSlot; 
+    private CardSlot currentBoundCardSlot;
+    Coroutine punchRoutine;
+    Transform punching;
+    Vector3 punchingBaseScale; 
 
     void Start()
     {
@@ -43,6 +51,7 @@ public class CharacterDrag : MonoBehaviour
         isDragging = true;
         ShowUnboundVisual();
         SetVisibleAlpha(dragAlpha);
+        StartHoldPulse(unboundVisual != null ? unboundVisual.transform : transform);
     }
 
     // 2. 鼠标拖拽中：更新角色位置
@@ -66,6 +75,7 @@ public class CharacterDrag : MonoBehaviour
         // 恢复拖拽状态和透明度
         isDragging = false;
         SetVisibleAlpha(1f);
+        StopPunch();
 
         // 标记是否匹配到卡牌
         bool isAttachedToCard = false;
@@ -96,6 +106,8 @@ public class CharacterDrag : MonoBehaviour
 
                 ShowBoundVisual();
                 AlignBoundVisualToPivot(card.transform);
+                PlayPunch(boundVisual != null ? boundVisual.transform : transform);
+                cardSlot.PlayDropFeedback();
                 CardManager.Instance?.CheckWin();
 
                 break; // 匹配到一个卡牌后停止遍历
@@ -117,10 +129,90 @@ public class CharacterDrag : MonoBehaviour
         // 重置位置时解绑旧卡牌
         UnbindCurrentCardSlot();
         
+        StopPunch();
         transform.position = originalPos;
         isDragging = false;
         ShowUnboundVisual();
         SetVisibleAlpha(1f);
+    }
+
+    void StartHoldPulse(Transform target)
+    {
+        if (target == null)
+            return;
+
+        StopPunch();
+        punching = target;
+        punchingBaseScale = target.localScale;
+        punchRoutine = StartCoroutine(HoldPulse(target, punchingBaseScale));
+    }
+
+    IEnumerator HoldPulse(Transform target, Vector3 baseScale)
+    {
+        float time = 0f;
+        float amount = feedbackAmount;
+
+        while (isDragging)
+        {
+            time += Time.deltaTime;
+            float wave = Mathf.Sin(time * 12f);
+            float x = 1f + wave * amount;
+            float y = 1f - wave * amount * 0.75f;
+            target.localScale = new Vector3(baseScale.x * x, baseScale.y * y, baseScale.z);
+            yield return null;
+        }
+
+        target.localScale = baseScale;
+        punchRoutine = null;
+        punching = null;
+    }
+
+    void PlayPunch(Transform target)
+    {
+        if (target == null)
+            return;
+
+        StopPunch();
+        punching = target;
+        punchingBaseScale = target.localScale;
+        punchRoutine = StartCoroutine(Punch(target, punchingBaseScale));
+    }
+
+    void StopPunch()
+    {
+        if (punchRoutine != null)
+        {
+            StopCoroutine(punchRoutine);
+            punchRoutine = null;
+        }
+
+        if (punching != null)
+        {
+            punching.localScale = punchingBaseScale;
+            punching = null;
+        }
+    }
+
+    IEnumerator Punch(Transform target, Vector3 baseScale)
+    {
+        float duration = Mathf.Max(0.05f, feedbackDuration);
+        float amount = feedbackAmount;
+        float time = 0f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float p = Mathf.Clamp01(time / duration);
+            float pop = Mathf.Sin(p * Mathf.PI) * Mathf.Exp(-2.4f * p);
+            float x = 1f + pop * amount;
+            float y = 1f - pop * amount * 0.75f;
+            target.localScale = new Vector3(baseScale.x * x, baseScale.y * y, baseScale.z);
+            yield return null;
+        }
+
+        target.localScale = baseScale;
+        punchRoutine = null;
+        punching = null;
     }
 
     // 新增：通用解绑方法（复用逻辑，避免重复代码）

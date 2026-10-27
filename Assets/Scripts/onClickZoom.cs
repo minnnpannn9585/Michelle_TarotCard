@@ -12,6 +12,8 @@ public class onClickZoom : MonoBehaviour
     [SerializeField] float targetOrthoSize = 1.5f;
     [SerializeField] float zoomDuration = 1.2f;
     [SerializeField] Camera zoomCamera;
+    [Tooltip("Turned off as soon as this collider is clicked.")]
+    [SerializeField] GameObject hideOnClick;
 
     Collider2D clickCollider2D;
     Collider clickCollider;
@@ -69,6 +71,9 @@ public class onClickZoom : MonoBehaviour
     IEnumerator ZoomThenLoad()
     {
         zooming = true;
+
+        if (hideOnClick != null)
+            hideOnClick.SetActive(false);
 
         Vector3 startPos = zoomCamera.transform.position;
         Vector3 endPos = GetZoomWorldPoint();
