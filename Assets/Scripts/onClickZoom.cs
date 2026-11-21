@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class onClickZoom : MonoBehaviour
 {
-    [SerializeField] string nextSceneName = "Cutscene";
+    [SerializeField] string nextSceneName = "CutsceneNew";
     [Tooltip("World point to center the camera on. If empty, Zoom Point is used.")]
     [SerializeField] Transform zoomTarget;
     [SerializeField] Vector3 zoomPoint;
